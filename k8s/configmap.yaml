@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: feature-store-config
+  namespace: default
+data:
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "feature_store"
+  KAFKA_BROKERS: "kafka-service:9092"
+  KAFKA_TOPIC: "feature_updates"
+  LOG_LEVEL: "INFO"
+  SYNC_INTERVAL: "30"
+  DRIFT_THRESHOLD: "0.1"
+  METRICS_PORT: "8080"
+  API_PORT: "8000"
+  FEATURE_TTL: "3600"
+  MAX_BATCH_SIZE: "1000"
