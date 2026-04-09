@@ -2,93 +2,66 @@
 
 Production-grade feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
 
+## Features
+
+- **Real-time sync**: Kafka-based feature pipeline synchronization
+- **Dual storage**: Redis for low-latency access, PostgreSQL for persistence  
+- **ML monitoring**: Data drift detection and feature quality metrics
+- **Production ready**: Kubernetes deployment, auto-scaling, monitoring
+
 ## Architecture
 
 ```
-Kafka Stream → Sync Engine → Feature Store
-                    ↓
-              PostgreSQL (persistent)
-                    ↓
-                Redis (cache)
+Kafka → Sync Engine → Redis (cache) + PostgreSQL (persistence)
+                  ↓
+              REST API → ML Models
+                  ↓
+           Drift Detection → Alerts
 ```
-
-## Tech Stack
-
-- **Backend**: Python FastAPI
-- **Storage**: PostgreSQL + Redis
-- **Streaming**: Kafka
-- **Monitoring**: Prometheus + Grafana
-- **Infrastructure**: Terraform + Kubernetes
-- **Deployment**: Docker + CI/CD
-
-## Skills Demonstrated
-
-- **ML/Data**: Feature engineering, drift detection, real-time pipelines
-- **Backend**: FastAPI, async processing, data validation
-- **Database**: PostgreSQL optimization, Redis caching strategies
-- **Infrastructure**: Terraform (GCP), Kubernetes manifests
-- **SRE**: Health checks, monitoring, observability
-- **DevOps**: CI/CD, containerization, GitOps
 
 ## Quick Start
 
-### Local Development
 ```bash
+# Local development
 docker-compose up -d
-python -m src.main
-```
 
-### Kubernetes Deployment
-```bash
+# Kubernetes deployment
 kubectl apply -f k8s/
-```
 
-### Terraform Infrastructure
-```bash
-cd terraform
-terraform init
-terraform apply
+# Test the API
+curl http://localhost:8000/features/user_123
 ```
 
 ## API Endpoints
 
-- `GET /features/{feature_id}` - Retrieve feature
+- `GET /features/{entity_id}` - Get features for entity
 - `POST /features/batch` - Batch feature retrieval
-- `POST /features/sync` - Force sync from Kafka
 - `GET /health` - Health check
 - `GET /metrics` - Prometheus metrics
 
-## Monitoring
+## Configuration
 
-- **Metrics**: Feature freshness, cache hit rates, sync latency
-- **Alerts**: Feature drift detection, sync failures
-- **Dashboards**: Grafana dashboard for feature store health
+All configuration is managed via Kubernetes ConfigMaps and environment variables:
 
-## Feature Schema
+- Redis/PostgreSQL connection settings
+- Kafka consumer configuration
+- Drift detection thresholds
+- API and metrics ports
+- Feature TTL and batch sizes
 
-```python
-class FeatureRecord:
-    feature_id: str
-    feature_value: float
-    timestamp: datetime
-    metadata: Dict[str, Any]
-```
+## Infrastructure
 
-## Current Status
+- **Kubernetes**: Auto-scaling deployment with HPA
+- **Terraform**: GCP infrastructure provisioning
+- **Monitoring**: Prometheus metrics, Grafana dashboards
+- **CI/CD**: GitHub Actions with automated testing
 
-✅ Core feature store implementation  
-✅ Redis caching layer  
-✅ PostgreSQL persistence  
-✅ Kafka streaming consumer  
-✅ Feature drift detection  
-✅ Docker containerization  
-✅ Terraform infrastructure  
-✅ Prometheus monitoring  
-✅ Kubernetes deployment manifests  
-🔄 CI/CD pipeline  
-📋 Load testing  
-📋 Chaos engineering
+## Skills Demonstrated
 
-## License
-
-MIT
+- **ML/AI**: Feature store architecture, data drift detection
+- **Infrastructure**: Terraform, Kubernetes, cloud deployment
+- **Backend**: REST APIs, distributed caching, microservices
+- **Database**: PostgreSQL persistence, Redis caching
+- **DevOps**: Container orchestration, monitoring, CI/CD
+- **Data**: Kafka streaming, ETL pipelines, data quality
+- **SRE**: Health checks, metrics, observability
