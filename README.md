@@ -1,67 +1,54 @@
 # ML Feature Store Sync
 
-Production-grade feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
-
-## Features
-
-- **Real-time sync**: Kafka-based feature pipeline synchronization
-- **Dual storage**: Redis for low-latency access, PostgreSQL for persistence  
-- **ML monitoring**: Data drift detection and feature quality metrics
-- **Production ready**: Kubernetes deployment, auto-scaling, monitoring
+Production feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
 
 ## Architecture
 
 ```
-Kafka → Sync Engine → Redis (cache) + PostgreSQL (persistence)
-                  ↓
-              REST API → ML Models
-                  ↓
-           Drift Detection → Alerts
+ML Models → Kafka/PubSub → Feature Store API → Redis Cache + PostgreSQL
+                                ↓
+                         Drift Detection + Lineage Tracking
 ```
+
+## Features
+
+- **Real-time sync**: Kafka consumer for streaming feature updates
+- **Dual storage**: Redis for low-latency reads, PostgreSQL for persistence
+- **ML monitoring**: Feature drift detection and alerting
+- **API lineage**: Track feature usage across models
+- **Production-ready**: Full observability, health checks, auto-scaling
 
 ## Quick Start
 
 ```bash
-# Local development
-docker-compose up -d
+# Deploy infrastructure
+cd terraform && terraform apply
 
-# Kubernetes deployment
+# Deploy to Kubernetes
 kubectl apply -f k8s/
 
-# Test the API
-curl http://localhost:8000/features/user_123
+# Or run locally
+docker-compose up
 ```
 
 ## API Endpoints
 
-- `GET /features/{entity_id}` - Get features for entity
-- `POST /features/batch` - Batch feature retrieval
 - `GET /health` - Health check
-- `GET /metrics` - Prometheus metrics
-
-## Configuration
-
-All configuration is managed via Kubernetes ConfigMaps and environment variables:
-
-- Redis/PostgreSQL connection settings
-- Kafka consumer configuration
-- Drift detection thresholds
-- API and metrics ports
-- Feature TTL and batch sizes
+- `GET /features/{key}` - Retrieve feature
+- `POST /features` - Store feature
+- `GET /lineage/{model_id}` - Feature lineage
 
 ## Infrastructure
 
-- **Kubernetes**: Auto-scaling deployment with HPA
-- **Terraform**: GCP infrastructure provisioning
-- **Monitoring**: Prometheus metrics, Grafana dashboards
-- **CI/CD**: GitHub Actions with automated testing
+- **GCP**: Redis, Cloud SQL, Pub/Sub, GKE
+- **Monitoring**: Prometheus, Grafana, alerting rules
+- **Auto-scaling**: HPA based on CPU and memory
+- **Security**: TLS, authentication, network policies
 
-## Skills Demonstrated
+## Tech Stack
 
-- **ML/AI**: Feature store architecture, data drift detection
-- **Infrastructure**: Terraform, Kubernetes, cloud deployment
-- **Backend**: REST APIs, distributed caching, microservices
-- **Database**: PostgreSQL persistence, Redis caching
-- **DevOps**: Container orchestration, monitoring, CI/CD
-- **Data**: Kafka streaming, ETL pipelines, data quality
-- **SRE**: Health checks, metrics, observability
+- **Backend**: FastAPI, asyncio, gRPC
+- **Storage**: Redis, PostgreSQL
+- **Streaming**: Kafka/Pub Sub
+- **ML**: scikit-learn, feature drift detection
+- **Infra**: Terraform, Kubernetes, Docker
