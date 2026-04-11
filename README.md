@@ -4,51 +4,52 @@ Production feature store with Redis caching, PostgreSQL persistence, and real-ti
 
 ## Architecture
 
-```
-ML Models → Kafka/PubSub → Feature Store API → Redis Cache + PostgreSQL
-                                ↓
-                         Drift Detection + Lineage Tracking
-```
+- **Storage**: PostgreSQL (persistence) + Redis (caching)
+- **Streaming**: Kafka consumer for real-time features
+- **Monitoring**: Prometheus metrics, drift detection
+- **API**: FastAPI with health checks and feature lineage
+- **Infrastructure**: Kubernetes deployment with HPA, Terraform for GCP
 
-## Features
+## Skills Demonstrated
 
-- **Real-time sync**: Kafka consumer for streaming feature updates
-- **Dual storage**: Redis for low-latency reads, PostgreSQL for persistence
-- **ML monitoring**: Feature drift detection and alerting
-- **API lineage**: Track feature usage across models
-- **Production-ready**: Full observability, health checks, auto-scaling
+- **ML/Data**: Feature store, drift detection, real-time pipelines
+- **Infrastructure**: Terraform, Kubernetes, monitoring setup
+- **Backend**: FastAPI, PostgreSQL, Redis integration
+- **DevOps**: CI/CD, containerization, observability
+- **SRE**: Metrics collection, health checks, reliability
 
 ## Quick Start
 
 ```bash
-# Deploy infrastructure
-cd terraform && terraform apply
+# Local development
+docker-compose up -d
+pip install -r requirements.txt
+python src/main.py
 
-# Deploy to Kubernetes
+# Kubernetes deployment
 kubectl apply -f k8s/
 
-# Or run locally
-docker-compose up
+# Infrastructure
+cd terraform && terraform apply
 ```
 
 ## API Endpoints
 
 - `GET /health` - Health check
-- `GET /features/{key}` - Retrieve feature
+- `GET /features/{feature_id}` - Retrieve feature
 - `POST /features` - Store feature
-- `GET /lineage/{model_id}` - Feature lineage
+- `GET /lineage/{feature_id}` - Feature lineage
+- `GET /metrics` - Prometheus metrics
 
-## Infrastructure
+## Monitoring
 
-- **GCP**: Redis, Cloud SQL, Pub/Sub, GKE
-- **Monitoring**: Prometheus, Grafana, alerting rules
-- **Auto-scaling**: HPA based on CPU and memory
-- **Security**: TLS, authentication, network policies
+- Prometheus ServiceMonitor for metrics scraping
+- Feature drift detection with configurable thresholds
+- Redis/PostgreSQL connection monitoring
+- Kafka lag monitoring
 
-## Tech Stack
+## Testing
 
-- **Backend**: FastAPI, asyncio, gRPC
-- **Storage**: Redis, PostgreSQL
-- **Streaming**: Kafka/Pub Sub
-- **ML**: scikit-learn, feature drift detection
-- **Infra**: Terraform, Kubernetes, Docker
+```bash
+pytest tests/ -v
+```
