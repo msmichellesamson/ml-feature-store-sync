@@ -2,80 +2,68 @@
 
 Production-grade feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
 
-## Features
-
-- **Real-time Sync**: Kafka-based streaming pipeline for feature updates
-- **Multi-storage**: Redis for low-latency access, PostgreSQL for persistence
-- **Schema Management**: Versioned feature schemas with validation
-- **Drift Detection**: Automatic feature drift monitoring and alerting
-- **Feature Validation**: REST API for validating features against schemas
-- **Production Ready**: Full observability, health checks, and auto-scaling
-
 ## Architecture
 
 ```
 Kafka → Transformer → Feature Store (Redis + PostgreSQL)
-                           ↓
-                    ML Models (via API)
+  ↓
+API Layer → ML Models
+  ↓
+Monitoring & Drift Detection
 ```
+
+## Key Features
+
+- **Real-time synchronization** between Redis cache and PostgreSQL storage
+- **Feature versioning** with automatic schema evolution
+- **Drift detection** with configurable thresholds
+- **Circuit breaker pattern** for resilient external service calls
+- **Comprehensive monitoring** with Prometheus metrics
+- **Batch and streaming** feature ingestion
+- **Feature lineage tracking** for ML governance
+
+## Infrastructure
+
+- **Kubernetes** deployment with HPA
+- **Terraform** for AWS infrastructure
+- **Redis Cluster** for high-availability caching
+- **PostgreSQL** with connection pooling
+- **Kafka** for real-time streaming
+- **Prometheus + Grafana** for observability
 
 ## API Endpoints
 
-### Features
-- `GET /features/{feature_group}` - Get feature values
-- `POST /features/batch` - Batch feature retrieval
-- `PUT /features/{feature_group}` - Update features
-
-### Validation
-- `POST /validation/validate` - Validate features against schema
-- `GET /validation/schema/{feature_group}` - Get validation schema
-
-### Monitoring
-- `GET /health` - Health check
-- `GET /metadata/lineage/{feature_group}` - Feature lineage
+- `GET /health` - Health checks with circuit breaker status
+- `POST /features` - Store feature vectors
+- `GET /features/{key}` - Retrieve features with fallback
+- `POST /batch` - Bulk feature operations
+- `GET /metadata` - Feature schema and lineage
 
 ## Quick Start
 
 ```bash
-# Start infrastructure
+# Development
 docker-compose up -d
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run feature store
 python -m src.main
-```
 
-## Configuration
-
-- Redis: Caching layer for sub-millisecond access
-- PostgreSQL: Persistent storage with versioning
-- Kafka: Streaming feature updates
-- Prometheus: Metrics and drift detection
-
-## Infrastructure
-
-Deploy to AWS using Terraform:
-
-```bash
-cd terraform/
-terraform plan
+# Production deployment
 terraform apply
+kubectl apply -k k8s/
 ```
 
 ## Monitoring
 
-- Feature drift detection with alerting
-- API latency and error rate tracking
-- Cache hit/miss ratios
-- Schema validation metrics
+- Circuit breaker metrics for Redis/PostgreSQL
+- Feature drift detection alerts
+- API latency and error rates
+- Cache hit ratios and sync delays
 
 ## Tech Stack
 
-- **Backend**: Python, FastAPI, asyncio
-- **Storage**: Redis, PostgreSQL
-- **Streaming**: Apache Kafka
-- **Infrastructure**: Terraform, Kubernetes, Docker
-- **Monitoring**: Prometheus, Grafana
-- **CI/CD**: GitHub Actions
+- **Python 3.11** with asyncio
+- **FastAPI** for REST API
+- **Redis** for caching layer
+- **PostgreSQL** for persistent storage
+- **Kafka** for streaming ingestion
+- **Prometheus** for metrics
+- **Kubernetes** for orchestration
