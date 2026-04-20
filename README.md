@@ -6,8 +6,10 @@
 
 Train/serve skew — when the features your model sees in production don't match
 what it was trained on — is one of the most-cited and least-solved problems in
-production ML. Uber's Michelangelo paper, Tecton's blog posts, and Google's
-TFX documentation all describe the same shape of bug: a feature pipeline
+production ML. Uber's [Michelangelo post](https://www.uber.com/blog/michelangelo-machine-learning-platform/),
+[Tecton's blog](https://www.tecton.ai/blog/) posts, and Google's
+[TFX documentation](https://www.tensorflow.org/tfx/guide) all describe the
+same shape of bug: a feature pipeline
 quietly diverges between offline (training) and online (serving), and model
 quality silently degrades for weeks.
 
@@ -87,7 +89,8 @@ actually started — I built the substrate, not the experiment yet.
 
 ## References
 
-- Hermann & Del Balso, *Meet Michelangelo: Uber's Machine Learning Platform* (2017)
-- Polyzotis et al., *Data Lifecycle Challenges in Production Machine Learning* (SIGMOD 2018)
-- Tecton blog, *The State of Feature Stores* series
-- Sculley et al., *Hidden Technical Debt in Machine Learning Systems* (NeurIPS 2015)
+- Hermann & Del Balso, [*Meet Michelangelo: Uber's Machine Learning Platform*](https://www.uber.com/blog/michelangelo-machine-learning-platform/) (2017)
+- Polyzotis et al., [*Data Lifecycle Challenges in Production Machine Learning: A Survey*](https://dl.acm.org/doi/10.1145/3299887.3299891) (SIGMOD Record, 2018)
+- Tecton, [*What is a Feature Store?*](https://www.tecton.ai/blog/what-is-a-feature-store/) and the [Tecton blog](https://www.tecton.ai/blog/) series
+- Sculley et al., [*Hidden Technical Debt in Machine Learning Systems*](https://papers.nips.cc/paper_files/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html) (NeurIPS 2015)
+- [Feast](https://github.com/feast-dev/feast) — the open-source feature store this project is in dialogue with
