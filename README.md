@@ -1,94 +1,81 @@
 # ML Feature Store Sync
 
-Production feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
+Production-grade feature store with Redis caching, PostgreSQL persistence, and real-time ML feature pipeline synchronization.
 
-## 🏗️ Architecture
+## Features
+
+- **Real-time Sync**: Kafka-based streaming pipeline for feature updates
+- **Multi-storage**: Redis for low-latency access, PostgreSQL for persistence
+- **Schema Management**: Versioned feature schemas with validation
+- **Drift Detection**: Automatic feature drift monitoring and alerting
+- **Feature Validation**: REST API for validating features against schemas
+- **Production Ready**: Full observability, health checks, and auto-scaling
+
+## Architecture
 
 ```
-Kafka Stream → Feature Store → Redis Cache → ML Models
-                    ↓
-              PostgreSQL (persistence)
-                    ↓
-           Drift Detection & Monitoring
+Kafka → Transformer → Feature Store (Redis + PostgreSQL)
+                           ↓
+                    ML Models (via API)
 ```
 
-## 🚀 Features
-
-- **Real-time sync**: Kafka-based streaming pipeline
-- **Dual storage**: Redis for speed, PostgreSQL for persistence  
-- **Feature versioning**: Schema evolution and rollback
-- **Drift detection**: Automated data quality monitoring
-- **Production APIs**: RESTful endpoints with caching
-- **Infrastructure**: Terraform + Kubernetes deployment
-- **Observability**: Prometheus metrics + structured logging
-
-## 📡 API Endpoints
+## API Endpoints
 
 ### Features
-- `GET /api/v1/features/{name}` - Get feature values
-- `POST /api/v1/features/batch` - Batch feature retrieval
-- `GET /api/v1/features/{name}/lineage` - Feature lineage
+- `GET /features/{feature_group}` - Get feature values
+- `POST /features/batch` - Batch feature retrieval
+- `PUT /features/{feature_group}` - Update features
 
-### Metadata  
-- `GET /api/v1/metadata/features/{name}` - Feature metadata with caching
-- `GET /api/v1/metadata/features` - List all features
+### Validation
+- `POST /validation/validate` - Validate features against schema
+- `GET /validation/schema/{feature_group}` - Get validation schema
 
-### Health
-- `GET /health` - Service health check
-- `GET /health/detailed` - Component health status
+### Monitoring
+- `GET /health` - Health check
+- `GET /metadata/lineage/{feature_group}` - Feature lineage
 
-## 🛠️ Tech Stack
+## Quick Start
+
+```bash
+# Start infrastructure
+docker-compose up -d
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run feature store
+python -m src.main
+```
+
+## Configuration
+
+- Redis: Caching layer for sub-millisecond access
+- PostgreSQL: Persistent storage with versioning
+- Kafka: Streaming feature updates
+- Prometheus: Metrics and drift detection
+
+## Infrastructure
+
+Deploy to AWS using Terraform:
+
+```bash
+cd terraform/
+terraform plan
+terraform apply
+```
+
+## Monitoring
+
+- Feature drift detection with alerting
+- API latency and error rate tracking
+- Cache hit/miss ratios
+- Schema validation metrics
+
+## Tech Stack
 
 - **Backend**: Python, FastAPI, asyncio
 - **Storage**: Redis, PostgreSQL
 - **Streaming**: Apache Kafka
-- **Infrastructure**: Terraform, Kubernetes, GCP
+- **Infrastructure**: Terraform, Kubernetes, Docker
 - **Monitoring**: Prometheus, Grafana
 - **CI/CD**: GitHub Actions
-
-## 🏃 Quick Start
-
-```bash
-# Start services
-docker-compose up -d
-
-# Run tests
-pytest tests/ -v
-
-# Deploy to GCP
-cd terraform && terraform apply
-kubectl apply -k k8s/
-```
-
-## 🔧 Configuration
-
-```python
-# Environment variables
-REDIS_URL=redis://localhost:6379
-POSTGRES_URL=postgresql://user:pass@localhost/features
-KAFKA_BROKERS=localhost:9092
-PROMETHEUS_PORT=8080
-```
-
-## 📊 Monitoring
-
-- Feature freshness alerts
-- Cache hit rate metrics  
-- Data drift detection
-- API latency tracking
-- Database query performance
-
-## 🏗️ Infrastructure
-
-- **Terraform**: VPC, RDS, ElastiCache, ALB
-- **Kubernetes**: HPA, service mesh, monitoring
-- **Observability**: Prometheus ServiceMonitor
-
-## 🧪 Testing
-
-- Unit tests for all components
-- Integration tests with real Redis/PostgreSQL
-- Load testing for API endpoints
-- Chaos engineering for reliability
-
-Built for production ML workloads requiring sub-100ms feature serving with enterprise-grade reliability.
